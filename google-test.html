@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Google Sign-In Test</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 60px auto; padding: 20px; background: #f5f5f5; color: #222; }
+  .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+  h1 { color: #333; margin-top: 0; }
+  button { background: #1a1a2e; color: white; padding: 14px 28px; border: none; border-radius: 30px; font-size: 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; margin-top: 10px; }
+  button:hover { background: #333; }
+  .g-icon { background: white; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #4285F4; font-weight: bold; font-family: serif; }
+  ol { line-height: 1.7; }
+  code { background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Google Sign-In Test</h1>
+  <p><b>This test will tell us exactly what is wrong.</b></p>
+
+  <p>Click the button below. One of three things will happen:</p>
+  <ol>
+    <li><b>Google account chooser appears</b> (showing emails like sana@gmail.com) → your Google setup works! Pick an account and see what happens next (read step A or B below).</li>
+    <li><b>Google shows a red error page</b> like "Error 400: redirect_uri_mismatch" → take a screenshot and send to me.</li>
+    <li><b>Nothing happens at all</b> → your browser is blocking the redirect. Send me a screenshot of the developer console (press F12).</li>
+  </ol>
+
+  <button onclick="goToGoogle()">
+    <span class="g-icon">G</span>
+    Test Continue with Google
+  </button>
+
+  <hr style="margin: 30px 0;">
+
+  <p><b>After picking your Google account, you will land back on <code>index.php</code>:</b></p>
+  <ul>
+    <li><b>A.</b> If you get logged into SmartBudget (see your dashboard) → <b>EVERYTHING WORKS!</b> The button in your real app should also work — try it now.</li>
+    <li><b>B.</b> If you land on the Create Account / Login page and see a long string starting with <code>#id_token=</code> in your browser's address bar → <b>your index.php was NOT replaced</b> with the new one. Re-download the zip and replace the file.</li>
+  </ul>
+</div>
+
+<script>
+var CLIENT_ID = '106708907215-d0oiq2g3vuu700g66r1k560rul8qi56o.apps.googleusercontent.com';
+
+function goToGoogle(){
+  var nonce = Math.random().toString(36).substring(2) + Date.now().toString(36);
+  var params = new URLSearchParams({
+    client_id: CLIENT_ID,
+    redirect_uri: 'http://localhost:8080/smartbudget/index.php',
+    response_type: 'id_token',
+    scope: 'openid email profile',
+    nonce: nonce,
+    prompt: 'select_account'
+  });
+  location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+}
+</script>
+</body>
+</html>
